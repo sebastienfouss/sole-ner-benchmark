@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this material, please cite the paper."
+title: "sole-ner-benchmark: reproducibility materials for SOLE NER"
+authors:
+  - family-names: Fouss
+    given-names: Sébastien
+    orcid: "https://orcid.org/0009-0001-3668-6353"
+license: "Apache-2.0 AND CC-BY-4.0"
+repository-code: "https://github.com/sebastienfouss/sole-ner-benchmark"
+preferred-citation:
+  type: conference-paper
+  title: "Toward Pareto-Efficient Sovereign NER with Open-Weight LLMs"
+  authors:
+    - family-names: Fouss
+      given-names: Sébastien
+      orcid: "https://orcid.org/0009-0001-3668-6353"
+  collection-title: "The 2026 ACM/IEEE Joint Conference on Digital Libraries (JCDL '26)"
+  year: 2026
+  doi: "10.1145/3805696.3846009"

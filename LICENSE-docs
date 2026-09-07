@@ -1,0 +1,8 @@
+The documentation in this repository — PROMPT.md, stages.md, README.md, and the
+files under manifests/ and results/ — is licensed under the Creative Commons
+Attribution 4.0 International License (CC-BY-4.0).
+
+Full text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+The code under scorer/ is licensed separately under the Apache License 2.0;
+see LICENSE.
