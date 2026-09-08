@@ -15,7 +15,7 @@ production system — the deterministic stages are published as a specification.
 
 | Path | What it is |
 |---|---|
-| `PROMPT.md` | The structured extraction prompt, verbatim as executed (Arms C and D). |
+| `PROMPT.md` | The structured extraction prompt — **both messages**, verbatim as executed. Certified for Arm D; Arm C carries the same `prompt_id = structured` in `results_long.csv`, but the script that ran it was not preserved. |
 | `scorer/entity_scorer.py` | The frozen entity-level scorer, v1. Applied identically to gold and predictions. |
 | `stages.md` | Prose specification of the deterministic post-processing chain. |
 | `manifests/` | Slice definitions. Document identifiers only — no corpus text. |
@@ -61,6 +61,14 @@ Not redistributed here. Obtain them upstream:
   [EuropeanaNewspapers/ner-corpora](https://github.com/EuropeanaNewspapers/ner-corpora),
   file `enp_FR.bnf.bio`. `manifests/europeana-fr-bnf.md` documents the
   deterministic conversion into the 964 scored passages.
+
+## Provenance of the prompt
+
+The prompt is **defined in code**, not loaded from a data file: the system message
+is a string constant and the user message is built by a template function, both in
+the extraction module of the frozen benchmark state. Nothing at run time reads a
+`prompt.txt` or any similar file — a file of that name found in the authors'
+tooling is unrelated to these runs and was never loaded.
 
 ## Limits
 
