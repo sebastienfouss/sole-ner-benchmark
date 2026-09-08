@@ -1,14 +1,19 @@
 # Extraction prompt (SOLE) — verbatim
 
 **Version:** frozen benchmark state `scorer-v1-complete` (commit `c6a9770`, 2026-05-29)
-**Used by:** Arm C (prompt-only) and Arm D (full system) in Table 2 of the paper.
+**Used by:** Arm D (full system) in Table 2 of the paper; Arm C carries the same
+`prompt_id = structured`, but its runner was not preserved (see README).
 **License:** CC-BY-4.0.
 
-This is the structured extraction prompt exactly as executed for the reported
-runs. It is sent as the system prompt; the document under extraction is sent as
-the user message.
+The extraction uses **two messages**, both reproduced verbatim below. The block
+under *System prompt* is sent as the system message. The document under
+extraction is inserted into the `{document_text}` placeholder of the
+*User-message template*, which also carries the required JSON output schema —
+the document is never sent bare.
 
 ---
+
+## System prompt
 
 ```text
 You are an expert named entity recognition system for historical
@@ -73,15 +78,47 @@ Country and region ABBREVIATIONS are PLACE entities — do not skip them :
 
 ---
 
+## User-message template
+
+Sent as the user message. `{document_text}` is replaced by the document under
+extraction; everything else is fixed. This template carries the required output
+schema, including the `confidence` field on which the parser applies its 0.6
+rejection threshold.
+
+```text
+Extract all named entities from the following historical document.
+
+DOCUMENT:
+"""
+{document_text}
+"""
+
+Return this exact JSON structure:
+{
+  "entities": [
+    {
+      "id": "e1",
+      "text": "exact text as found in document",
+      "type": "PERSON|PLACE|ORG|CONCEPT|DATE",
+      "confidence": 0.95
+    }
+  ]
+}
+```
+
+---
+
 ## Conditional blocks: what else could reach the model
 
 The prompt above is the complete base. At run time the builder may append blocks.
 For the reported benchmark runs:
 
-- **Retrieval-augmented blocks (few-shot examples, gazetteer hints) were OFF.**
-  Both are gated behind flags that default to disabled
-  (`ENABLE_FEW_SHOT_RETRIEVAL`, `GAZETTEER_HINTS_IN_PROMPT`, both `false`),
-  and the benchmark did not set them. No retrieved content entered the prompt.
+- **Retrieval-augmented blocks (few-shot examples, gazetteer hints).** Both are
+  gated behind flags — `ENABLE_FEW_SHOT_RETRIEVAL`, `GAZETTEER_HINTS_IN_PROMPT` —
+  that **default to `false`** and are **not overridden anywhere in the frozen
+  tree**. The runs are therefore expected to have used the base prompt above.
+  We state this as an expectation rather than a fact: the toggles also resolve
+  from a per-request option dict, and the per-run command line was not preserved.
 - **Two domain-persona hints** may append when the document text triggers them:
   one for pharmacopoeia/apothecary regulation, one for corporate reports
   (the latter requires three or more distinct trigger terms). Both hints only
