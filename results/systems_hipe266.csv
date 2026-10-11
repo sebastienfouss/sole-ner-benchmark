@@ -1,0 +1,5 @@
+system,substrate,prompt,pipeline,corpus,n,pms_mean,pms_sigma,pmr_mean,pmr_sigma,ent_mean,ent_sigma,run_ids,provenance
+SOLE,gpt-oss-120B,structured,full,hipe2020-fr-dev-266,3,0.613,0.002,0.818,0.003,0.865,0.003,not-recorded,frozen-baseline-2026-05-29
+raw,gpt-oss-120B,raw,none,hipe2020-fr-dev-266,3,0.469,0.009,0.580,0.012,0.626,0.014,not-recorded,frozen-baseline-2026-05-29
+raw,claude-sonnet-4-6,raw,none,hipe2020-fr-dev-266,3,0.612,0.001,0.813,0.002,0.895,0.001,not-recorded,frozen-baseline-2026-05-29
+SOLE,claude-sonnet-4-6,structured,replay,hipe2020-fr-dev-266,3,0.625,0.001,0.819,0.001,0.864,0.001,not-recorded,frozen-baseline-2026-05-29

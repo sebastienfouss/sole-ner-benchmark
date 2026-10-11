@@ -30,6 +30,7 @@ production system — the deterministic stages are published as a specification.
 | Ablation on the two primary corpora | `results/arm_ablation_phase1_complete.csv` | Per-run and aggregate for HIPE and CoNLL, including PM-strict. |
 | Prompt/pipeline decomposition | derived | Differences between the arm means in `variance_all.csv`. |
 | Variance reduction | `results/variance_all.csv` | The `sigma` and `cv_percent` columns. |
+| Per-system comparison on HIPE, PM-strict included | `results/systems_hipe266.csv` | One row per system (substrate × prompt × pipeline), with PMs, PMr and ENT side by side. |
 
 All quality numbers are N=3 for stochastic systems, scored with the frozen v1
 scorer.
@@ -41,6 +42,13 @@ scorer.
 appeared in the original working files has been replaced by `Full` throughout;
 no numeric value was altered.
 
+*Pipeline column, Arm B.* Arm B's `pipeline` column reads **`replay`**, not `full`.
+Arm B was never executed through the deployed service: it is an offline replay of
+saved raw extractions through the deterministic stages that do not require a
+database. The column previously read `full`, which invited the opposite reading.
+Arm D keeps `full` — it did run through the deployed service. **Label only; no
+numeric value was altered.** See `stages.md` for which stages the replay omits.
+
 *Rounding.* The aggregate `mean` columns are stored rounded to four decimals.
 Two of them sit exactly on a `.xxx5` boundary, so re-rounding an aggregate to
 three decimals can be off by one in the last digit. To reproduce a published
@@ -50,6 +58,21 @@ cell, average the per-run values in `results_long.csv` and round once:
 |---|---|---|---|
 | CoNLL, Arm B, PMr | 0.9098 · 0.8852 · 0.8943 | 0.896433 | 0.896 |
 | Europeana, Arm C, PMr | 0.7349 · 0.7403 · 0.7344 | 0.736533 | 0.737 |
+
+## Added after submission
+
+Everything in this section was added to the repository **after the paper was
+submitted**. It changes no published number.
+
+| Added | What | Measured when |
+|---|---|---|
+| `results/systems_hipe266.csv` | the four systems of the HIPE comparison in one table, PM-strict included | **before** submission — these are the frozen 2026-05-29 baseline values, newly surfaced in this layout |
+| Arm B `pipeline` label `full` → `replay` | corrects a misleading column value | n/a — label only |
+| `manifests/europeana-fr-bnf-{first500,holdout214,latency50}.txt` | positional index lists that were previously described but not published | n/a — derived from the frozen slice manifest |
+| `stages.md`, stage-count reconciliation | states the two different stage counts in circulation and why they differ | n/a |
+
+Nothing in this section is a post-submission *measurement*. Where a number in
+this repository was measured after submission, it is labelled as such in place.
 
 ## Corpora
 

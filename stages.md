@@ -51,3 +51,51 @@ database-dependent stages above — **hard reject (4)**, **signature recovery
 (6)** and **gazetteer lookup (8)** — were not available. Arm B is therefore a
 **lower bound**, and the paper does not interpret Arm A → Arm B differences as a
 degradation. See the corresponding footnote in the paper.
+
+## Stage counts: reconciling 3, 5, 6 and 9
+
+Three different counts are in circulation because they count different things.
+The authoritative list is the implementation's own stage numbering, which has
+**15 post-processing stages** (the LLM call and the response parse are numbered
+separately and excluded from the 15).
+
+| # | stage | database-dependent | deterministic | in this spec | SOLE-Claude | Arm B replay |
+|---|---|---|---|---|---|---|
+| 3 | regex date injection | no | yes | **no** | **omitted** | **omitted** |
+| 3.5 | honorific strip | no | yes | §5 | active | active |
+| 3.55 | ORG article strip | no | yes | §5 | active | active |
+| 3.6 | type forcing on nominal heads | no | yes | §5 | active | active |
+| 3.7 | PLACE geographic head strip | no | yes | §5 | active | active |
+| 4 | post-filter | no | yes | §3 | active | active |
+| 4.2 | hard reject | **yes** | yes | §4 | **omitted** | **omitted** |
+| 4.3 | descriptive ORG/PLACE rejection | no | yes | §5 | active | active |
+| 4.4 | geographic abbreviation injection | no | yes | §5 | active | active |
+| 4.5 | signature recovery | **yes** | **no** (stateful cache) | §6 | **omitted** | **omitted** |
+| 5 | short-form deduplication | no | yes | §7 | active | active |
+| 6 | confidence boost on markup | no | yes | **no** | active | **omitted** |
+| 6b | gazetteer lookup | **yes** | yes | §8 | **omitted** | **omitted** |
+| 7 | entity-centric resolution | no | yes | §9 | active | active |
+| 7.5 | citation / literary flagging | **yes** | yes | **no** | **omitted** | **omitted** |
+
+- **SOLE-Claude: 10 active, 5 omitted** — stages 3, 4.2, 4.5, 6b, 7.5.
+- **Arm B replay: 9 active, 6 omitted** — the same five plus stage 6.
+- **"3 omitted"**, as stated earlier in this file, counts only the
+  *database-dependent* stages (4.2, 4.5, 6b). It is the right count for the
+  question "which stages could not run offline", and it is the count that
+  matters for Arm B's lower-bound caveat.
+- **"9 stages"** is this specification's own numbering, which groups the six
+  boundary and typing rules into one section (§5) and does not document stages
+  3, 6 and 7.5 at all.
+
+So 3, 5, 6 and 9 are all correct, for four different questions. The two counts
+that matter when reading a number are: how many stages ran (10 for SOLE-Claude,
+9 for Arm B), and how many of the omitted ones could change the scored entity
+set (**three** — 4.2 removes entities, 4.5 adds them, 6b adds none; stage 3 only
+emits DATE records, which the PER/LOC/ORG taxonomy filter drops, stage 6 only
+adjusts confidence values, and stage 7.5 only attaches flags).
+
+**Of the three database-dependent stages, only one adds recall.** Signature
+recovery (4.5) recovers person entities the model never emitted. Hard reject
+(4.2) improves precision by removing records. Gazetteer lookup (6b) adds no
+entity at all — it attaches identifiers and type confirmations whose value is
+downstream of the benchmark.
